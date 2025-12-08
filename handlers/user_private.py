@@ -1,6 +1,6 @@
 from random import randint
 
-from aiogram import  types, Router, F
+from aiogram import types, Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 
@@ -14,9 +14,11 @@ user_private_router = Router()
 async def start_cmd(message: types.Message):
     await message.reply(text="Это бот для игры в D&D", reply_markup=kb.main)
 
+
 @user_private_router.message(F.text == "Кидаю кубик")
 async def start_cmd(message: types.Message):
     await message.reply(text="Да благославит тебя удача", reply_markup=kb.dice_keyboard)
+
 
 @user_private_router.callback_query(F.data.startswith("dice:"))
 async def choose_dice(callback: types.CallbackQuery, state: FSMContext):
@@ -26,10 +28,11 @@ async def choose_dice(callback: types.CallbackQuery, state: FSMContext):
 
     await callback.message.edit_text(
         f"Вы выбрали D{sides}. Теперь выберите количество бросков:",
-        reply_markup=kb.roll_count_keyboard
+        reply_markup=kb.roll_count_keyboard,
     )
 
     await state.set_state(DiceState.choose_rolls)
+
 
 @user_private_router.callback_query(F.data.startswith("rolls:"))
 async def make_roll(callback: types.CallbackQuery, state: FSMContext):
@@ -63,4 +66,3 @@ async def make_roll(callback: types.CallbackQuery, state: FSMContext):
     )
 
     await state.clear()
-
