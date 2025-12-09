@@ -1,7 +1,7 @@
 from random import randint, choice
 
 from aiogram import types, Router, F
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 
 import common.keyboards as kb
