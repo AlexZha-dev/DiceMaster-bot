@@ -64,6 +64,12 @@ export TOKEN="YOUR_BOT_TOKEN_HERE"       # Linux / Mac
 $env:TOKEN="YOUR_BOT_TOKEN_HERE"         # Windows PowerShell
 ```
 
+Optional log level:
+
+```bash
+export LOG_LEVEL="INFO"                  # DEBUG, INFO, WARNING, ERROR
+```
+
 4. Run the bot:
 
 ```bash
@@ -78,6 +84,7 @@ python app.py
 
 ```env
 TOKEN=YOUR_BOT_TOKEN_HERE
+LOG_LEVEL=INFO
 ```
 
 2. Build and start the bot:

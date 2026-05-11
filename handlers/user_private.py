@@ -5,25 +5,43 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 
 import common.keyboards as kb
+from core.logger import get_logger
 from states.dice_states import DiceState
 from common.d20_responses import d20_roll_messages
 
 user_private_router = Router()
+logger = get_logger(__name__)
 
 
 @user_private_router.message(CommandStart())
 async def start_cmd(message: types.Message):
+    logger.info(
+        "User started bot: user_id=%s chat_id=%s",
+        message.from_user.id if message.from_user else None,
+        message.chat.id,
+    )
     await message.reply(text="Это бот для игры в D&D", reply_markup=kb.main)
 
 
 @user_private_router.message(F.text == "Кидаю кубик")
 async def start_cmd(message: types.Message):
+    logger.info(
+        "User opened dice menu: user_id=%s chat_id=%s",
+        message.from_user.id if message.from_user else None,
+        message.chat.id,
+    )
     await message.reply(text="Да благославит тебя удача", reply_markup=kb.dice_keyboard)
 
 
 @user_private_router.callback_query(F.data.startswith("dice:"))
 async def choose_dice(callback: types.CallbackQuery, state: FSMContext):
     sides = int(callback.data.split(":")[1])
+    logger.info(
+        "User selected dice: user_id=%s chat_id=%s sides=%s",
+        callback.from_user.id,
+        callback.message.chat.id if callback.message else None,
+        sides,
+    )
 
     await state.update_data(dice_sides=sides)
 
@@ -42,8 +60,27 @@ async def make_roll(callback: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     sides = data.get("dice_sides")
 
+    if sides is None:
+        logger.warning(
+            "Roll requested without selected dice: user_id=%s chat_id=%s rolls=%s",
+            callback.from_user.id,
+            callback.message.chat.id if callback.message else None,
+            rolls,
+        )
+        await callback.answer("Choose a dice first", show_alert=True)
+        return
+
     results = [randint(1, sides) for _ in range(rolls)]
     total = sum(results)
+    logger.info(
+        "Dice rolled: user_id=%s chat_id=%s sides=%s rolls=%s results=%s total=%s",
+        callback.from_user.id,
+        callback.message.chat.id if callback.message else None,
+        sides,
+        rolls,
+        results,
+        total,
+    )
 
     funny_comments = []
 
