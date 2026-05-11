@@ -60,14 +60,42 @@ pip install -r requirements.txt
 3. Set your **Telegram bot token** as an environment variable:
 
 ```bash
-export TELEGRAM_TOKEN="YOUR_BOT_TOKEN_HERE"  # Linux / Mac
-set TELEGRAM_TOKEN=YOUR_BOT_TOKEN_HERE       # Windows
+export TOKEN="YOUR_BOT_TOKEN_HERE"       # Linux / Mac
+$env:TOKEN="YOUR_BOT_TOKEN_HERE"         # Windows PowerShell
 ```
 
 4. Run the bot:
 
 ```bash
-python bot.py
+python app.py
+```
+
+---
+
+## Docker deployment
+
+1. Create `.env` in the project root:
+
+```env
+TOKEN=YOUR_BOT_TOKEN_HERE
+```
+
+2. Build and start the bot:
+
+```bash
+docker compose -f docker_compose.yaml up -d --build
+```
+
+3. View logs:
+
+```bash
+docker compose -f docker_compose.yaml logs -f bot
+```
+
+4. Stop the bot:
+
+```bash
+docker compose -f docker_compose.yaml down
 ```
 
 ---

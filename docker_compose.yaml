@@ -1,0 +1,9 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telegram_dice_bot
+    env_file:
+      - .env
+    restart: unless-stopped
